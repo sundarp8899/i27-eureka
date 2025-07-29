@@ -9,7 +9,7 @@ pipeline {
         APPLICATON_NAME = "eureka"
     }
     stages {
-        stage ('buildstage') {
+        stage ('build') {
             steps {
                 echo "building my ${env.APPLICATION_NAME} application"
                 sh "mvn clean package -DskipsTest=true"
