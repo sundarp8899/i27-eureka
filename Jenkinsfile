@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'slave2'
     }
+    tools {
+        maven 'maven-3.8.9'
+    }
     stages {
         stage ('buildstage') {
             steps {
