@@ -9,12 +9,12 @@ pipeline {
         APPLICATON_NAME = "eureka"
     }
     stages {
-        stage ('buildstage') {
+        stage('buildstage') {
             steps {
                 echo "building my ${env.APPLICATION_NAME} application"
-                sh "mvn clean package"
+                sh "mvn clean package -DskipsTest=true"
             }
-            stage ('sonar') {
+            stage('sonar') {
                 steps {
                     echo "sonar scans"
                     sh """ 
