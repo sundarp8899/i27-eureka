@@ -6,6 +6,8 @@ pipeline {
         maven 'maven-3.8.9'
     }
     environment {
+        POM_VERSION = readMavenPom().getVersion()
+        POM_PACKAGING = readMavenPom().getPackaging()
         APPLICATION_NAME = 'eureka'
         SONAR_URL = 'http://34.30.55.27:9000'
         SONAR_TOKEN = credentials('sonar_creds')
@@ -33,6 +35,12 @@ pipeline {
                         waitForQualityGate abortPipeline: true
                     }
                 }
+            }
+        }
+        stage ('formatbuild') {
+            steps {
+                echo "Testing JAR Source: i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
+                echo "Testing JAR Destination: i27-${env.APPLICATION_NAME}-${BUILD_NUMBER}-${BRANCH_NAME}.${env.POM_PACKAGING}"
             }
         }
     }
