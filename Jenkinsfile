@@ -43,5 +43,12 @@ pipeline {
                 echo "Testing JAR Destination: i27-${env.APPLICATION_NAME}-${BUILD_NUMBER}-${BRANCH_NAME}.${env.POM_PACKAGING}"
             }
         }
+        stage ('dockerbuildandpush') {
+            steps {
+                echo "docker image pushing"
+                sh "cp target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd"
+                sh "docker build --no-cache --build-arg JAR_SOURCE=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t eureka:v4 ./.cicd"
+            }
+        }
     }
 }
