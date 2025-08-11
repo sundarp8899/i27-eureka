@@ -20,7 +20,7 @@ pipeline {
         stage('sonar') {
             steps {
                 echo "sonar scans"
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('sonarQube') {
                     sh """
                          mvn clean verify sonar:sonar \
                               -Dsonar.projectKey=i27-eureka \
