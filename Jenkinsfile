@@ -61,7 +61,7 @@ pipeline {
                 echo "deplyoing to dev environment"
                 withCredentials([usernamePassword(credentialsId: 'remo_docker_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         // some block
-                    sh "sshpass -p $PASSWORD -v ssh -o strictHostkeyChecking=no $USERNAME@$docker_vm_ip \"hostname -i\""    
+                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"hostname -i\""    
                 }
             }
         }
