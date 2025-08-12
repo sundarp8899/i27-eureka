@@ -56,28 +56,28 @@ pipeline {
                 sh "docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
             }
         }
-        stage ('Deploy To dev') {
+        stage ('deploy To dev') {
             steps {
                 script {
                     dockerDeploy('dev', '5761').call()
                 }
             }
         }
-        stage ('Deploy To test') {
+        stage ('deploy To test') {
             steps {
                 script {
                     dockerDeploy('dev', '6761').call()
                 }
             }
         }
-        stage ('Deploy To stage') {
+        stage ('deploy To stage') {
             steps {
                 script {
                     dockerDeploy('dev', '7761').call()
                 }
             }
         }
-        stage ('Deploy To prod') {
+        stage ('deploy To prod') {
             steps {
                 script {
                     dockerDeploy('dev', '8761').call()
