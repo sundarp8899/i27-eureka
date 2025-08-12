@@ -56,14 +56,56 @@ pipeline {
                 sh "docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
             }
         }
-        stage ('deploytodev') {
+        stage ('Deploy To dev') {
             steps {
-                echo "deplyoing to dev environment"
-                withCredentials([usernamePassword(credentialsId: 'remo_docker_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                        // some block
-                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"hostname -i\""    
+                script {
+                    dockerDeploy('dev', '5761').call()
                 }
             }
         }
+        stage ('Deploy To test') {
+            steps {
+                script {
+                    dockerDeploy('dev', '6761').call()
+                }
+            }
+        }
+        stage ('Deploy To stage') {
+            steps {
+                script {
+                    dockerDeploy('dev', '7761').call()
+                }
+            }
+        }
+        stage ('Deploy To prod') {
+            steps {
+                script {
+                    dockerDeploy('dev', '8761').call()
+                }
+            }
+        }
+    }
+}
+
+def dockerDeploy(envDeploy, port){
+    return {
+        echo "Deploying to $envDeploy Environment"
+            withCredentials([usernamePassword(credentialsId: 'remo_docker_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                    // some block
+                script {
+                    try {
+                        // stop the container
+                        sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"docker stop ${APPLICATION_NAME}-$envDeploy\""
+
+                        // remove the container
+                        sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"docker rm ${APPLICATION_NAME}-$envDeploy\"" 
+                    }
+                    catch(err) {
+                        echo "Error caught: $err"
+                    }
+                    // Creating a container
+                    sh "sshpass -p $PASSWORD -v ssh -o StrictHostKeyChecking=no $USERNAME@$docker_vm_ip \"docker run --name ${APPLICATION_NAME}-$envDeploy -p $port:8761 -d ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT\""
+                }
+            } 
     }
 }
