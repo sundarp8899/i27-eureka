@@ -56,5 +56,14 @@ pipeline {
                 sh "docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:$GIT_COMMIT"
             }
         }
+        stage ('deploytodev') {
+            steps {
+                echo "deplyoing to dev environment"
+                withCredentials([usernamePassword(credentialsId: 'remo_docker_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        // some block
+                    sh "sshpass -p $PASSWORD -v ssh -o strictHostkeyChecking=no $USERNAME@$docker_vm_ip \"hostname -i\""    
+                }
+            }
+        }
     }
 }
