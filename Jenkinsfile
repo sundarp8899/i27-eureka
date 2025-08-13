@@ -66,21 +66,21 @@ pipeline {
         stage ('deploy To test') {
             steps {
                 script {
-                    dockerDeploy('dev', '6761').call()
+                    dockerDeploy('test', '6761').call()
                 }
             }
         }
         stage ('deploy To stage') {
             steps {
                 script {
-                    dockerDeploy('dev', '7761').call()
+                    dockerDeploy('stage', '7761').call()
                 }
             }
         }
         stage ('deploy To prod') {
             steps {
                 script {
-                    dockerDeploy('dev', '8761').call()
+                    dockerDeploy('prod', '8761').call()
                 }
             }
         }
